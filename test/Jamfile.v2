@@ -197,9 +197,34 @@ test-suite "doc-examples-ts"
 
 #_________________________________________________________________________________________________#
 
+rule boost.test-smoke-ts-logger ( test-name-prefix : logger ? )
+{
+    logger ?= HRF ;
+
+    to-return =
+      [ run smoke-ts-static : --log_format=$(logger) : : : $(test-name-prefix)-0  ]
+      [ run smoke-ts-static : --log_format=$(logger) --log_level=all  : : : $(test-name-prefix)-1  ]
+      [ run smoke-ts-static : --log_sink=smoke-ts-sink.$(logger) --log_format=$(logger)  : : : $(test-name-prefix)-2  ]
+      [ run smoke-ts-static : --log_sink=smoke-ts-sink.$(logger) --log_format=$(logger) --log_level=all : : : $(test-name-prefix)-3  ]
+   ;
+   return $(to-return) ;
+}
+
+exe smoke-ts-static : smoke-ts/basic-smoke-test.cpp ../build//boost_unit_test_framework/<link>static ;
+
+alias "smoke-ts"
+:
+  [ boost.test-smoke-ts-logger bt-st-txml : XML ]
+  [ boost.test-smoke-ts-logger bt-st-thrf : HRF ]
+  [ boost.test-smoke-ts-logger bt-st-tjunit : JUNIT ]
+;
+
+#_________________________________________________________________________________________________#
+
 # A target that runs all the tests
 alias test
 :
+  smoke-ts
   utils-ts
   usage-variants-ts
   framework-ts
