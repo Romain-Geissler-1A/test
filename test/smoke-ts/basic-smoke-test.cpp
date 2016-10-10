@@ -6,9 +6,11 @@
 //  See http://www.boost.org/libs/test for the library home page.
 
 #define BOOST_TEST_MODULE basic_smoke_test
-#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
 #include <boost/test/data/test_case.hpp>
 #include <boost/test/data/monomorphic.hpp>
+
+#include <iostream>
 
 namespace bdata = boost::unit_test::data;
 
